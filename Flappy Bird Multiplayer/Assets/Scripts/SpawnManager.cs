@@ -4,37 +4,40 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    float time;
+    float clock;
     const float cooldown = 2;
 
-    [SerializeField] GameObject[] obstaclePrefab;
+    [SerializeField] GameObject obstaclePrefab;
+    [SerializeField] int numberOfObstacles = 5;  // Número de obstáculos a gerar
+    [SerializeField] int obstaclesToSpawn = 3;  // Número de obstáculos a gerar
 
     private void Update()
     {
-        spanw();
-    }
-    public void spanw()
-    {
-        if (time <=0)
+        if (clock <= 0)
         {
-            float randomT = Random.Range(0, 1f);
-            GameObject towersellect = null;
+            clock = cooldown;
 
-            switch (randomT)
+            // Laço para gerar múltiplos obstáculos ao mesmo tempo
+            for (int i = 0; i < numberOfObstacles; i++)
             {
-                case <= 0.5f:
-                    towersellect = obstaclePrefab[0];
-                    break;
-                case >=0.5f:
-                    towersellect= obstaclePrefab[1];
-                    break;
+                Vector2 spawnPosition = new Vector2(GameManager.instance.ScreenBounds.x, Random.Range(-2, 2));
+                Instantiate(obstaclePrefab, spawnPosition, Quaternion.identity);
             }
-            Instantiate(towersellect);
-            time = cooldown;
+            // Gerar múltiplos obstáculos
+            SpawnObstacles(obstaclesToSpawn);
         }
         else
         {
-            time-= Time.deltaTime;
+            clock -= Time.deltaTime;
+        }
+    }
+    // Método para gerar múltiplos obstáculos
+    void SpawnObstacles(int numberOfObstacles)
+    {
+        for (int i = 0; i < numberOfObstacles; i++)
+        {
+            Vector2 spawnPosition = new Vector2(GameManager.instance.ScreenBounds.x, Random.Range(-2, 2));
+            Instantiate(obstaclePrefab, spawnPosition, Quaternion.identity);
         }
     }
 }
